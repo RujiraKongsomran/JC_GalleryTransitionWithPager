@@ -12,11 +12,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +43,7 @@ fun MainScreen() {
     }
 
     val pagerState = rememberPagerState()
+    val matrix = remember { ColorMatrix() }
 
     Scaffold(modifier = Modifier.padding(vertical = 48.dp)) { padding ->
         HorizontalPager(
@@ -53,6 +57,15 @@ fun MainScreen() {
                 animationSpec = tween(durationMillis = 300),
                 label = "image size"
             )
+
+            LaunchedEffect(key1 = imageSize) {
+                if (pageOffset != 0.0f) {
+                    matrix.setToSaturation(0f)
+                } else {
+                    matrix.setToSaturation(1f)
+                }
+            }
+
             AsyncImage(
                 modifier = Modifier
                     .fillMaxSize()
@@ -66,7 +79,9 @@ fun MainScreen() {
                     .data(images[index])
                     .build(),
                 contentDescription = "Image",
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                colorFilter = ColorFilter.colorMatrix(matrix)
+
             )
         }
     }
