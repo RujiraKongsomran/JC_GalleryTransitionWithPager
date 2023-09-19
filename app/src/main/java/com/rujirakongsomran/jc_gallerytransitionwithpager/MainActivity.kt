@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JC_GalleryTransitionWithPagerTheme {
                 // A surface container using the 'background' color from the theme
-                VerticalPager()
+                MainScreen()
             }
         }
     }
